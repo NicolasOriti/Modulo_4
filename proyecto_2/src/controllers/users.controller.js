@@ -5,6 +5,8 @@ const getUsers = async (req, res) => {
   const { limit, offset, role } = req.query;
   const query = { isActive: true };
 
+  console.log('user:', req.user);
+
   if (role) query.role = role;
 
   // const allUsers = await UserModel.find(query).skip(offset).limit(limit);
@@ -55,9 +57,15 @@ const updateUser = async (req, res) => {
     const { id } = req.params;
     const { password, email, ...restBody } = req.body;
 
-    console.log(restBody);
+    const queryBody = { ...restBody };
 
-    const userUpdated = await UserModel.findByIdAndUpdate(id, restBody, { new: true });
+    if (password) {
+      const salt = bcrypt.genSaltSync(10);
+      const hashPass = bcrypt.hashSync(password, salt);
+      queryBody.password = hashPass;
+    }
+
+    const userUpdated = await UserModel.findByIdAndUpdate(id, queryBody, { new: true });
     res.json({
       message: 'User updated successfully',
       user: userUpdated,

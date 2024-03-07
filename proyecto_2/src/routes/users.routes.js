@@ -2,13 +2,16 @@ const { Router } = require('express');
 const { check } = require('express-validator');
 
 const { getUsers, createUser, updateUser, deleteUser } = require('../controllers/users.controller');
-const { validateFields } = require('../helpers/validateFields');
 const { emailExist, isValidRole } = require('../helpers/dbValidators');
+
+const { validateFields } = require('../middlewares/validateFields');
+const { validateJWT } = require('../middlewares/validateJWT');
+const { isAdminRole } = require('../middlewares/validateRole');
 
 const router = Router();
 
 // http://localhost:3000/api/users
-router.get('/', getUsers);
+router.get('/', [validateJWT, isAdminRole], getUsers);
 router.post(
   '/',
   [
