@@ -2,7 +2,7 @@ const bcrypt = require('bcryptjs');
 const UserModel = require('../models/user');
 
 const getUsers = async (req, res) => {
-  const { limit, offset, role } = req.query;
+  const { limit = 10, offset = 0, role } = req.query;
   const query = { isActive: true };
 
   console.log('user:', req.user);
