@@ -87,9 +87,14 @@ const updateCategory = async (req, res) => {
   try {
     const categoryUpdated = await CategoryModel.findByIdAndUpdate(
       id,
-      { ...body, name: name.toUpperCase() },
+      { ...body, name: name && name.toUpperCase() },
       { new: true }
     );
+
+    // ||
+    // &&
+    // !
+    // condicion ? "Se ejecuta si es true" : "Se ejecuta si es false"
 
     if (!categoryUpdated) {
       return res.status(404).json({
